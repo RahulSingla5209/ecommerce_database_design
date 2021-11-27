@@ -23,16 +23,12 @@ CREATE TABLE ENTITY_DW (
 
 CREATE TABLE CUSTOMERS_DW (
   CustomerID        VARCHAR(50)  NOT NULL   PRIMARY KEY,
-  CustomerZipCode   NUMBER(5)    REFERENCES ENTITY_DW (ZipCode),
-  CustomerCity      VARCHAR(50),
-  CustomerState     VARCHAR(2)
+  CustomerZipCode   NUMBER(5)    REFERENCES ENTITY_DW (ZipCode)
 );
 
 CREATE TABLE SELLERS_DW (
   SellerID          VARCHAR(50)  NOT NULL   PRIMARY KEY,
-  SellerZipCode     NUMBER(5)    REFERENCES ENTITY_DW (ZipCode),
-  SellerCity        VARCHAR(50),
-  SellerState       VARCHAR(2)
+  SellerZipCode     NUMBER(5)    REFERENCES ENTITY_DW (ZipCode)
 );
 
 CREATE TABLE ORDERS_DW (
@@ -79,6 +75,8 @@ INSERT INTO PRODUCTS_DW (ProductID, ProductCategory, ProductPhotoCount, ProductW
 SELECT ProductID, ProductCategory, ProductPhotoCount, ProductWeight, ProductHeight, ProductLength
 FROM PRODUCTS;
 
+COMMIT;
+
 INSERT INTO ENTITY_DW (ZipCode, City, State)
 SELECT ZipCode, MIN(City) AS CITY, MIN(STATE) AS STATE
 FROM
@@ -91,14 +89,20 @@ FROM SELLERS
 GROUP BY SellerZipCode)
 GROUP BY ZipCode;
 
-INSERT INTO CUSTOMERS_DW (CustomerID, CustomerZipCode, CustomerCity, CustomerState)
-SELECT CustomerID, CustomerZipCode, CustomerCity, CustomerState
+COMMIT;
+
+INSERT INTO CUSTOMERS_DW (CustomerID, CustomerZipCode)
+SELECT CustomerID, CustomerZipCode
 FROM CUSTOMERS;
 
-INSERT INTO SELLERS_DW (SellerID, SellerZipCode, SellerCity, SellerState)
-SELECT SellerID, min(SellerZipCode), min(SellerCity), min(SellerState)
+COMMIT;
+
+INSERT INTO SELLERS_DW (SellerID, SellerZipCode)
+SELECT SellerID, min(SellerZipCode)
 FROM SELLERS
 group by SellerID;
+
+COMMIT;
 
 INSERT INTO ORDERS_DW (OrderID, CustomerID, OrderStatus, Price, PurchaseTimeStamp, OrderApprovalTimeStamp, OrderDeliveryTimeStamp, ShippingLimitDate, FrieghtValue)
 SELECT  OrderID, MIN(CustomerID), MIN(OrderStatus), MIN(Price), 
@@ -114,6 +118,8 @@ AND OrderDeliveryTimeStamp IS NOT NULL
 AND ShippingLimitDate IS NOT NULL
 GROUP BY ORDERID;
 
+COMMIT;
+
 INSERT INTO PAYMENT_DW (OrderID, PaymentSequence, PaymentType, PaymentInstallment, PaymentValue)
 SELECT OrderID, PaymentSequence, MIN(PaymentType), MIN(PaymentInstallment), MIN(PaymentValue)
 FROM ORDERS
@@ -126,4 +132,5 @@ FROM ORDERS
 WHERE ORDERID IN (SELECT DISTINCT ORDERID FROM ORDERS_DW)
 GROUP BY OrderID, OrderItemID;
 
-SELECT * FROM orderitems_dw
+
+COMMIT;
