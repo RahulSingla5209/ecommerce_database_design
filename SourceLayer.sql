@@ -4,7 +4,7 @@ DROP TABLE sellers;
 DROP TABLE products;
 
 CREATE TABLE customers (
-  CustomerID NUMBER,
+  CustomerID VARCHAR(50),
   CustomerZipCode NUMBER(5),
   CustomerCity VARCHAR(50),
   CustomerState VARCHAR(2),
@@ -12,7 +12,7 @@ CREATE TABLE customers (
 );
 
 CREATE TABLE sellers (
-  SellerID NUMBER,
+  SellerID VARCHAR(50),
   SellerZipCode NUMBER(5),
   SellerCity VARCHAR(50),
   SellerState VARCHAR(2),
@@ -20,32 +20,33 @@ CREATE TABLE sellers (
 );
 
 CREATE TABLE products (
-  ProductID NUMBER,
+  ProductID VARCHAR(50),
   ProductCategory VARCHAR(50),
   ProductPhotoCount NUMBER(3),
   ProductWeight NUMBER(9,2),
   ProductHeight NUMBER(9,2),
   ProductLength NUMBER(9,2),
+  ProductWidth NUMBER(9,2),
  CONSTRAINT product_pk  PRIMARY KEY(ProductID)
 );
 
 CREATE TABLE orders (
-  OrderID NUMBER,
-  CustomerID NUMBER REFERENCES customers(CustomerID),
-  SellerID NUMBER  REFERENCES sellers(SellerID),
-  ProductID NUMBER REFERENCES products(ProductID),
+  OrderID VARCHAR(50),
+  CustomerID VARCHAR(50) REFERENCES customers(CustomerID),
+  SellerID VARCHAR(50)  REFERENCES sellers(SellerID),
+  ProductID VARCHAR(50) REFERENCES products(ProductID),
   Price NUMBER(9,2),
   FrieghtValue NUMBER(9,2),
   OrderItemID NUMBER,
-  ShippingLimitDate DATE,
+  ShippingLimitDate VARCHAR(50),
   OrderStatus VARCHAR(12),
-  PurchaseTimeStamp DATE,
-  OrderApprovalTimeStamp DATE,
-  OrderDeliveryTimeStamp DATE,
+  PurchaseTimeStamp VARCHAR(50),
+  OrderApprovalTimeStamp VARCHAR(50),
+  OrderDeliveryTimeStamp VARCHAR(50),
   PaymentSequence NUMBER,
   PaymentType VARCHAR(12),
   PaymentInstallment NUMBER,
   PaymentValue NUMBER(9,2),
-  CONSTRAINT order_pk PRIMARY KEY (OrderID)
+  CONSTRAINT order_pk PRIMARY KEY (OrderID, OrderItemID, PaymentSequence)
 );
 
