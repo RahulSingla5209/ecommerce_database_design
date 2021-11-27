@@ -1,0 +1,51 @@
+DROP TABLE orders;
+DROP TABLE customers;
+DROP TABLE sellers;
+DROP TABLE products;
+
+CREATE TABLE customers (
+  CustomerID NUMBER,
+  CustomerZipCode NUMBER(5),
+  CustomerCity VARCHAR(50),
+  CustomerState VARCHAR(2),
+  CONSTRAINT customer_pk PRIMARY KEY(CustomerID)
+);
+
+CREATE TABLE sellers (
+  SellerID NUMBER,
+  SellerZipCode NUMBER(5),
+  SellerCity VARCHAR(50),
+  SellerState VARCHAR(2),
+  CONSTRAINT seller_pk PRIMARY KEY(SellerID)
+);
+
+CREATE TABLE products (
+  ProductID NUMBER,
+  ProductCategory VARCHAR(50),
+  ProductPhotoCount NUMBER(3),
+  ProductWeight NUMBER(9,2),
+  ProductHeight NUMBER(9,2),
+  ProductLength NUMBER(9,2),
+ CONSTRAINT product_pk  PRIMARY KEY(ProductID)
+);
+
+CREATE TABLE orders (
+  OrderID NUMBER,
+  CustomerID NUMBER REFERENCES customers(CustomerID),
+  SellerID NUMBER  REFERENCES sellers(SellerID),
+  ProductID NUMBER REFERENCES products(ProductID),
+  Price NUMBER(9,2),
+  FrieghtValue NUMBER(9,2),
+  OrderItemID NUMBER,
+  ShippingLimitDate DATE,
+  OrderStatus VARCHAR(12),
+  PurchaseTimeStamp DATE,
+  OrderApprovalTimeStamp DATE,
+  OrderDeliveryTimeStamp DATE,
+  PaymentSequence NUMBER,
+  PaymentType VARCHAR(12),
+  PaymentInstallment NUMBER,
+  PaymentValue NUMBER(9,2),
+  CONSTRAINT order_pk PRIMARY KEY (OrderID)
+);
+
